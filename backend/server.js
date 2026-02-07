@@ -20,7 +20,7 @@ const app = express();
 
 // لضمان عمل الموقع من أي مكان حالياً (للتعلم)
 app.use(cors({
-  origin: true, // تسمح لأي رابط (بما في ذلك Netlify) بالوصول
+  origin: 'https://ecommerce-2026.netlify.app', // رابط موقعك على نتليفاي
   credentials: true
 }));
 
