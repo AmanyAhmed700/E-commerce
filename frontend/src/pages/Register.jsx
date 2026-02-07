@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
+// الرابط الجديد الخاص بالسيرفر على Railway
+const API_URL = "https://e-commerce-production-24e0.up.railway.app";
+
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,19 +20,21 @@ const Register = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/register", {
+      // تم تغيير الرابط هنا ليتصل بالسيرفر الأونلاين
+      const res = await axios.post(`${API_URL}/api/auth/register`, {
         name,
         email,
         password,
       });
 
-      const userData = res.data.user;
+      // تأكدي من استلام التوكن والبيانات بشكل صحيح
+      const userData = res.data; 
 
-      // نخزن البيانات في context و localStorage
+      // تخزين البيانات في context و localStorage
       login(userData);
 
-      // التحويل بعد التسجيل
-      if (userData.role === "admin") {
+      // التحويل بعد التسجيل بناءً على الرتبة
+      if (userData.user?.role === "admin" || userData.role === "admin") {
         navigate("/admin/dashboard");
       } else {
         navigate("/");
@@ -41,49 +46,53 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">إنشاء حساب</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">إنشاء حساب جديد</h2>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-center text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block mb-1">الاسم الكامل</label>
+            <label className="block mb-1 text-sm font-medium text-gray-700">الاسم الكامل</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#8D5F8C] outline-none"
               required
             />
           </div>
 
           <div>
-            <label className="block mb-1">البريد الإلكتروني</label>
+            <label className="block mb-1 text-sm font-medium text-gray-700">البريد الإلكتروني</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#8D5F8C] outline-none"
               required
             />
           </div>
 
           <div>
-            <label className="block mb-1">كلمة المرور</label>
+            <label className="block mb-1 text-sm font-medium text-gray-700">كلمة المرور</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border px-3 py-2 rounded"
+              className="w-full border px-4 py-2 rounded-lg focus:ring-2 focus:ring-[#8D5F8C] outline-none"
               required
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-[#8D5F8C] text-white py-2 rounded hover:bg-[#ba8fb9] transition"
+            className="w-full bg-[#8D5F8C] text-white py-3 rounded-lg font-bold hover:bg-[#6d496c] shadow-md transition duration-300"
           >
             إنشاء حساب
           </button>
