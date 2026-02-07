@@ -1,8 +1,10 @@
-// src/pages/Cart.jsx
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+
+// أضيفي رابط السيرفر هنا أيضاً
+const API_URL = "https://e-commerce-production-24e0.up.railway.app";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity } = useCart();
@@ -32,25 +34,28 @@ const Cart = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-4 text-center">Shopping Cart</h1>
       {cart.items.length === 0 ? (
-        <p>Your cart is empty</p>
+        <div className="text-center py-10">
+           <p className="text-gray-500">Your cart is empty</p>
+        </div>
       ) : (
         <div className="space-y-4">
           {cart.items.map((item) => (
             <div
               key={item.product._id}
-              className="flex flex-col md:flex-row justify-between items-center border p-7 rounded"
+              className="flex flex-col md:flex-row justify-between items-center border p-7 rounded shadow-sm"
             >
               <div className="flex items-center gap-4">
                 {item.product.image && (
                   <img
-                    src={`http://localhost:5000/uploads/${item.product.image}`}
+                    // تم تغيير السطر هنا ليعمل مع السيرفر أونلاين
+                    src={`${API_URL}/uploads/${item.product.image}`}
                     alt={item.product.name}
-                    className="w-40 h-40 object-cover rounded"
+                    className="w-40 h-40 object-cover rounded shadow"
                   />
                 )}
                 <div>
-                  <h2 className="font-bold">{item.product.name}</h2>
-                  <p>{item.product.price} EGP</p>
+                  <h2 className="font-bold text-lg">{item.product.name}</h2>
+                  <p className="text-gray-600">{item.product.price} EGP</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-2 md:mt-0">
@@ -65,20 +70,22 @@ const Cart = () => {
                 />
                 <button
                   onClick={() => removeFromCart(item.product._id)}
-                  className="text-red-500 hover:underline"
+                  className="text-red-500 hover:text-red-700 font-medium"
                 >
                   Remove
                 </button>
               </div>
             </div>
           ))}
-          <h2 className="text-xl font-bold mt-4">Total: {total} EGP</h2>
-          <button
-            onClick={() => navigate("/checkout")}
-            className="mt-2 w-full md:w-auto bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition"
-          >
-           Start payment
-          </button>
+          <div className="border-t pt-4 mt-6">
+            <h2 className="text-2xl font-bold">Total: {total} EGP</h2>
+            <button
+              onClick={() => navigate("/checkout")}
+              className="mt-4 w-full md:w-auto bg-[#8D5F8C] text-white px-8 py-3 rounded-lg hover:bg-opacity-90 transition shadow-lg"
+            >
+              Go to Checkout
+            </button>
+          </div>
         </div>
       )}
     </div>

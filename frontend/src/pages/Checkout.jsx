@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaCcVisa, FaCcMastercard } from "react-icons/fa";
 
+
+
 const CheckoutAnimated = () => {
   const { cart, refreshCart } = useCart();
   const { user } = useAuth();
@@ -65,10 +67,10 @@ const CheckoutAnimated = () => {
       const data = paymentMethod === "vodafone" ? { paymentMethod, phone: vodafoneNumber } : { paymentMethod };
       
       // إرسال الطلب أولًا
-      await axios.post("http://localhost:5000/api/orders", data, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
-
+   // الرابط الصحيح للسيرفر أونلاين
+await axios.post("https://e-commerce-production-24e0.up.railway.app/api/orders", data, {
+  headers: { Authorization: `Bearer ${user.token}` },
+});
       // تفريغ العربة بعد نجاح الطلب
       refreshCart();
 
