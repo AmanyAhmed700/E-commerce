@@ -17,11 +17,17 @@ dotenv.config();
 connectDB();
 
 const app = express();
+// قائمة المواقع المسموح لها بالوصول للسيرفر
+const allowedOrigins = [
+  'https://amanyahmed700.github.io' // أضيفي رابط GitHub Pages هنا
+];
 
-// لضمان عمل الموقع من أي مكان حالياً (للتعلم)
+console.log("CORS Updated V2")
+
 app.use(cors({
-  origin: 'https://ecommerce-2026.netlify.app', // رابط موقعك على نتليفاي
-  credentials: true
+  origin: true, // هذا سيجعل السيرفر يقبل من أي رابط يطلبه (GitHub أو غيره)
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 app.use(express.json());
