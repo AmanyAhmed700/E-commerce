@@ -24,12 +24,14 @@ const allowedOrigins = [
 
 console.log("CORS Updated V2")
 
-app.use(cors({
-  origin: true, // هذا سيجعل السيرفر يقبل من أي رابط يطلبه (GitHub أو غيره)
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}));
-
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://amanyahmed700.github.io");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
