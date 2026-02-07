@@ -1,6 +1,6 @@
 // src/pages/ProductDetails.jsx
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // رابط السيرفر على Railway
@@ -12,6 +12,8 @@ function ProductDetails() {
   const [lensPos, setLensPos] = useState({ x: 0, y: 0, visible: false });
   const [zoomRatio, setZoomRatio] = useState(2);
   const imgRef = useRef(null);
+     
+const navigate = useNavigate();
 
   // Fetch product
   useEffect(() => {
@@ -131,12 +133,14 @@ function ProductDetails() {
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 pt-4">
-          <button
-            onClick={() => (window.location.href = "/checkout")}
-            className="flex-1 px-8 py-4 border border-gray-300 rounded-xl text-gray-800 font-medium hover:bg-gray-100 transition duration-300 text-lg"
-          >
-            Buy Now
-          </button>
+
+
+<button
+  onClick={() => navigate("/checkout")} // استخدام navigate بدلاً من window.location
+  className="flex-1 px-8 py-4 border border-gray-300 rounded-xl text-gray-800 font-medium hover:bg-gray-100 transition duration-300 text-lg"
+>
+  Buy Now
+</button>
         </div>
 
         {/* Shipping & Payment Info Icons */}
