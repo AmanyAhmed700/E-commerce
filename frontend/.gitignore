@@ -29,4 +29,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # Postman collection
-ecommerce.postman_collection.json
+# Env files
+frontend/.env
+backend/.env
+
+# Postman collection
+backend/ecommerce.postman_collection.json
+
