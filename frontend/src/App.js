@@ -1,16 +1,16 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// 1. استبدال BrowserRouter بـ HashRouter
+import { HashRouter as Router, Routes, Route } from "react-router-dom"; 
 import { AuthProvider } from "./context/AuthContext";
 import ProductDetails from "./pages/ProductDetails";
 import { CartProvider } from "./context/CartContext";
-// index.js أو App.js
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-medium-image-zoom/dist/styles.css";
 import SearchPage from "./pages/SearchPage";
-import "./index.css"; // لو حطينا CSS إضافي (snippets أدناه)
+import "./index.css"; 
 
- // استدعاء صحيح
 import Men from "./pages/Men";
 import Women from "./pages/Women";
 import Kids from "./pages/Kids";
@@ -29,18 +29,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
 
-// داخل <Routes>
-
-
 function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <BrowserRouter>
+        {/* 2. استخدام المكون Router الذي يشير الآن لـ HashRouter */}
+        <Router>
           <div className="flex flex-col min-h-screen">
             <Navbar />
 
-            {/* المحتوى ياخد المساحة المتبقية */}
             <div className="flex-grow">
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -48,17 +45,16 @@ function App() {
                 <Route path="/register" element={<Register />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
-                 <Route path="/search" element={<SearchPage />} />
-                 
-  <Route path="/men" element={<Men />} />
-  <Route path="/women" element={<Women />} />
-  <Route path="/kids" element={<Kids />} />
-  <Route path="/product/:id" element={<ProductDetails />} />
-  <Route element={<ProtectedRoute role="admin" />}>
-  <Route path="/admin/products" element={<ProductsAdmin />} />
-</Route>
-
+                <Route path="/search" element={<SearchPage />} />
+                
+                <Route path="/men" element={<Men />} />
+                <Route path="/women" element={<Women />} />
+                <Route path="/kids" element={<Kids />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                
+                {/* حماية مسارات الإدارة */}
                 <Route element={<ProtectedRoute role="admin" />}>
+                  <Route path="/admin/products" element={<ProductsAdmin />} />
                   <Route path="/admin" element={<AdminPanel />}>
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="users" element={<UserList />} />
@@ -68,9 +64,9 @@ function App() {
               </Routes>
             </div>
 
-            <Footer /> {/* هيفضل تحت دايمًا */}
+            <Footer />
           </div>
-        </BrowserRouter>
+        </Router>
       </CartProvider>
     </AuthProvider>
   );
