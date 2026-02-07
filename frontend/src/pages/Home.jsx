@@ -5,6 +5,9 @@ import axios from "../utils/api";
 import { Landing } from "./Landing";
 import OfferBanner from "./offer";
 
+// ضع رابط الـ Backend الخاص بك على Railway هنا
+const API_URL = "https://e-commerce-production-24e0.up.railway.app";
+
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("all"); // all, men, women, kids
@@ -81,9 +84,17 @@ const Home = () => {
         ) : filteredProducts.length === 0 ? (
           <p className="text-center col-span-full">لا توجد منتجات</p>
         ) : (
-          filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
+          filteredProducts.map((product) => {
+            // منطق تعديل رابط الصورة من localhost إلى Railway
+            const updatedProduct = {
+              ...product,
+              image: product.image?.startsWith("http://localhost") 
+                ? product.image.replace("http://localhost:5000", API_URL)
+                : product.image
+            };
+
+            return <ProductCard key={product._id} product={updatedProduct} />;
+          })
         )}
       </div>
 
