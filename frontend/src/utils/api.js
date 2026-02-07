@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL:"https://e-commerce-production-24e0.up.railway.app/api",
+  // تأكدي من وجود https:// في البداية ليعرف المتصفح أنه عنوان خارجي
+  baseURL: "https://e-commerce-production-24e0.up.railway.app/api", 
 });
 
 api.interceptors.request.use((config) => {
