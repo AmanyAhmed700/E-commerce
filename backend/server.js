@@ -18,9 +18,9 @@ connectDB();
 
 const app = express();
 
-// استخدام cors مرة واحدة فقط
+// لضمان عمل الموقع من أي مكان حالياً (للتعلم)
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000",
+  origin: true, // تسمح لأي رابط (بما في ذلك Netlify) بالوصول
   credentials: true
 }));
 
