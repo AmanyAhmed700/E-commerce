@@ -68,9 +68,12 @@ const Home = () => {
       </div>
 
       {/* قائمة المنتجات */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+   
         {loading ? (
           // skeleton cards
+          
           Array.from({ length: 8 }).map((_, idx) => (
             <div
               key={idx}
