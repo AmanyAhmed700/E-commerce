@@ -29,7 +29,7 @@ export default function Navbar() {
     };
     if (menuOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden"; // منع السكرول
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
@@ -56,10 +56,9 @@ export default function Navbar() {
           {/* 1. Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center group">
             <img src={logo} alt="Moon Logo" className="h-10 sm:h-12 w-auto transition-transform group-hover:scale-105" />
-            <span className="hidden sm:block ml-2 text-xl sm:text-2xl font-bold tracking-wider uppercase font-serif">Moon</span>
           </Link>
 
-          {/* 2. Search Bar */}
+          {/* 2. Search Bar - Desktop */}
           <div className="flex-1 max-w-xl hidden sm:block">
             <form onSubmit={handleSearch} className="relative group">
               <input
@@ -118,9 +117,6 @@ export default function Navbar() {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-3">
-            <Link to="/search" className="sm:hidden p-2 hover:bg-white/10 rounded-full transition">
-              <HiSearch className="h-6 w-6" />
-            </Link>
             <Link to="/cart" className="relative p-2 hover:bg-white/10 rounded-full transition">
               <HiOutlineShoppingCart className="h-6 w-6" />
               {cart.items.length > 0 && (
@@ -140,7 +136,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu - Modern Design */}
+      {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <>
           {/* Backdrop */}
@@ -152,6 +148,26 @@ export default function Navbar() {
           {/* Dropdown Menu */}
           <div className="absolute top-16 sm:top-20 left-0 right-0 mx-4 bg-white shadow-2xl md:hidden z-50 rounded-2xl overflow-hidden animate-slide-down">
             
+            {/* Search Bar - Mobile */}
+            <div className="p-4 bg-gray-50 border-b border-gray-100">
+              <form onSubmit={handleSearch} className="relative">
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full bg-white text-gray-800 placeholder-gray-400 border border-gray-300 px-4 py-3 pr-12 rounded-xl 
+                             focus:outline-none focus:ring-2 focus:ring-[#8D5F8C] focus:border-transparent transition-all text-sm"
+                />
+                <button 
+                  type="submit" 
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#8D5F8C] transition-colors"
+                >
+                  <HiSearch className="h-5 w-5" />
+                </button>
+              </form>
+            </div>
+
             {/* Navigation Links */}
             <div className="p-4 space-y-1">
               <Link 

@@ -4,6 +4,9 @@ import ProductCard from "../components/ProductCard";
 import axios from "../utils/api";
 import { Landing } from "./Landing";
 import OfferBanner from "./offer";
+import { IoIosWoman } from "react-icons/io";
+import { IoIosMan } from "react-icons/io";
+import { FaChild } from "react-icons/fa";
 
 const API_URL = "https://e-commerce-production-24e0.up.railway.app";
 
@@ -50,31 +53,66 @@ const Home = () => {
             Shop By Category
           </h2>
           
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
-            {[
-              { id: "all", label: "All Products", icon: "🛍️" },
-              { id: "men", label: "Men", icon: "👔" },
-              { id: "women", label: "Women", icon: "👗" },
-              { id: "kids", label: "Kids", icon: "🧸" }
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => handleCategoryChange(cat.id)}
-                className={`
-                  flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold 
-                  transition-all duration-200 transform hover:scale-105
-                  ${
-                    category === cat.id
-                      ? "bg-gradient-to-r from-[#8D5F8C] to-[#9D6F9C] text-white shadow-lg shadow-[#8D5F8C]/30"
-                      : "bg-white text-gray-700 hover:bg-gray-50 shadow-md border border-gray-200"
-                  }
-                `}
-              >
-                <span className="text-lg sm:text-xl">{cat.icon}</span>
-                <span className="text-sm sm:text-base">{cat.label}</span>
-              </button>
-            ))}
-          </div>
+  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 p-4">
+  {[
+    { 
+      id: "all", 
+      label: "All Products", 
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+        </svg>
+      )
+    },
+{
+  id: "men",
+  label: "Men",
+  icon: (
+<IoIosMan />
+  )
+},
+
+  {
+  id: "women",
+  label: "Women",
+  icon: (
+ 
+
+
+<IoIosWoman />
+  )
+},
+
+{
+  id: "kids",
+  label: "Kids",
+  icon: (
+  <FaChild />
+  )
+}
+
+  ].map((cat) => (
+    <button
+      key={cat.id}
+      onClick={() => handleCategoryChange(cat.id)}
+      className={`
+        flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-xl font-semibold 
+        transition-all duration-300 transform hover:scale-105 active:scale-95
+        ${
+          category === cat.id
+            ? "bg-gradient-to-r from-[#8D5F8C] to-[#9D6F9C] text-white shadow-lg shadow-[#8D5F8C]/30"
+            : "bg-white text-gray-600 hover:text-[#8D5F8C] hover:bg-gray-50 shadow-sm border border-gray-100"
+        }
+      `}
+    >
+      {/* عرض الأيقونة */}
+      <span className={category === cat.id ? "text-white" : "text-[#8D5F8C]"}>
+        {cat.icon}
+      </span>
+      <span className="text-sm sm:text-base whitespace-nowrap">{cat.label}</span>
+    </button>
+  ))}
+</div>
         </div>
 
         {/* Products Count & Info */}
