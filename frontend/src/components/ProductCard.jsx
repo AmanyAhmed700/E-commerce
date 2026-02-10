@@ -16,34 +16,53 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    // التعديل: جعل خلفية الكارد بيضاء بالكامل "bg-white" لدمج خلفية الصورة مع الكارد
-    <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-4 flex flex-col items-center hover:shadow-md transition-shadow">
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full group">
       
-      <Link to={`/product/${product._id}`} className="w-full text-center group">
-        {/* التعديل: وضع الصورة داخل حاوية بخلفية رمادية فاتحة جداً لإعطائها مظهراً احترافياً */}
-        <div className="w-full aspect-square bg-gray-50 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
-          <img
-            src={getImageUrl()}
-            alt={product.name}
-            // التعديل: استخدام mix-blend-multiply لدمج الخلفية البيضاء للصورة مع خلفية الحاوية
-            className="w-full h-full object-contain mix-blend-multiply transform group-hover:scale-110 transition-transform duration-300"
-          />
+      {/* Image Section - Takes 50% of card height */}
+      <Link to={`/product/${product._id}`} className="relative w-full h-48 sm:h-56 md:h-64 bg-gray-50 overflow-hidden flex-shrink-0">
+        <img
+          src={getImageUrl()}
+          alt={product.name}
+          className="w-full h-full object-contain mix-blend-multiply p-4 transform group-hover:scale-105 transition-transform duration-500"
+        />
+        
+        {/* Category Badge */}
+        <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm">
+          <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
+            {product.category}
+          </span>
         </div>
-
-        <h2 className="text-lg font-semibold mb-1 text-gray-800 group-hover:text-[#8D5F8C] transition">
-          {product.name}
-        </h2>
       </Link>
 
-      <p className="text-xs text-gray-400 uppercase tracking-wider mb-2">{product.category}</p>
-      <p className="text-xl font-bold mb-4 text-[#8D5F8C]">{product.price} <span className="text-sm">EGP</span></p>
+      {/* Content Section - Takes 50% of card height */}
+      <div className="flex flex-col flex-1 p-4 sm:p-5">
+        
+        {/* Product Name */}
+        <Link to={`/product/${product._id}`} className="mb-auto">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-[#8D5F8C] transition-colors duration-200">
+            {product.name}
+          </h2>
+        </Link>
 
-      <button
-        onClick={() => addToCart(product._id, 1)}
-        className="w-full bg-[#f3f4f6] text-gray-700 font-medium py-2.5 rounded-lg hover:bg-[#8D5F8C] hover:text-white transition-colors duration-300 shadow-sm"
-      >
-        Add To Cart
-      </button>
+        {/* Price & Add to Cart Section */}
+        <div className="mt-auto space-y-3">
+          {/* Price */}
+          <div className="flex items-baseline gap-1">
+            <span className="text-2xl sm:text-3xl font-bold text-[#8D5F8C]">
+              {product.price}
+            </span>
+            <span className="text-sm text-gray-500 font-medium">EGP</span>
+          </div>
+
+          {/* Add to Cart Button */}
+          <button
+            onClick={() => addToCart(product._id, 1)}
+            className="w-full bg-gradient-to-r from-[#8D5F8C] to-[#9D6F9C] text-white font-semibold py-2.5 sm:py-3 rounded-lg hover:from-[#7D4F7C] hover:to-[#8D5F8C] active:scale-95 transform transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            Add To Cart
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

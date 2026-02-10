@@ -22,6 +22,23 @@ export default function Navbar() {
     }
   }, [cart.items.length]);
 
+  // إغلاق المنيو عند الضغط على Escape
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    if (menuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // منع السكرول
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [menuOpen]);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -34,15 +51,15 @@ export default function Navbar() {
   return (
     <nav className="bg-[#8D5F8C] text-white sticky top-0 z-[100] w-full shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 gap-4">
+        <div className="flex justify-between items-center h-16 sm:h-20 gap-4">
           
           {/* 1. Logo */}
           <Link to="/" className="flex-shrink-0 flex items-center group">
-            <img src={logo} alt="Moon Logo" className="h-12 w-auto transition-transform group-hover:scale-105" />
-            <span className="hidden sm:block ml-2 text-2xl font-bold tracking-wider uppercase font-serif">Moon</span>
+            <img src={logo} alt="Moon Logo" className="h-10 sm:h-12 w-auto transition-transform group-hover:scale-105" />
+            <span className="hidden sm:block ml-2 text-xl sm:text-2xl font-bold tracking-wider uppercase font-serif">Moon</span>
           </Link>
 
-          {/* 2. Search Bar (تعديل العرض ليكون متناسقاً) */}
+          {/* 2. Search Bar */}
           <div className="flex-1 max-w-xl hidden sm:block">
             <form onSubmit={handleSearch} className="relative group">
               <input
@@ -91,88 +108,159 @@ export default function Navbar() {
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Link to="/login" className="p-2 hover:bg-white/10 rounded-full transition"><HiOutlineUser className="h-7 w-7"/></Link>
+                  <Link to="/login" className="p-2 hover:bg-white/10 rounded-full transition">
+                    <HiOutlineUser className="h-7 w-7"/>
+                  </Link>
                 </div>
               )}
             </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
-             {/* أيقونة البحث للموبايل */}
-             <Link to="/search" className="sm:hidden p-2"><HiSearch className="h-6 w-6" /></Link>
-             <Link to="/cart" className="relative p-2"><HiOutlineShoppingCart className="h-6 w-6" />
-                {cart.items.length > 0 && <span className="absolute top-0 right-0 bg-red-500 text-[10px] w-4 h-4 rounded-full flex items-center justify-center">{cart.items.length}</span>}
-             </Link>
-             <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">
-               {menuOpen ? <HiX className="h-8 w-8" /> : <HiMenu className="h-8 w-8" />}
-             </button>
+          <div className="md:hidden flex items-center gap-3">
+            <Link to="/search" className="sm:hidden p-2 hover:bg-white/10 rounded-full transition">
+              <HiSearch className="h-6 w-6" />
+            </Link>
+            <Link to="/cart" className="relative p-2 hover:bg-white/10 rounded-full transition">
+              <HiOutlineShoppingCart className="h-6 w-6" />
+              {cart.items.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                  {cart.items.length}
+                </span>
+              )}
+            </Link>
+            <button 
+              onClick={() => setMenuOpen(!menuOpen)} 
+              className="p-1.5 hover:bg-white/10 rounded-full transition"
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? <HiX className="h-7 w-7" /> : <HiMenu className="h-7 w-7" />}
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 4. Mobile Side/Top Menu Overlay */}
-     {/* 4. Mobile Top Menu Overlay */}
-{menuOpen && (
-  <div className="absolute top-20 left-0 w-full bg-white shadow-2xl md:hidden z-50 animate-fade-in-down rounded-b-3xl">
-    <div className="flex flex-col py-4 px-4 space-y-2">
-      
-      {/* الروابط الأساسية بشكل كروت صغيرة ناعمة */}
-      <Link 
-        to="/men" 
-        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
-        onClick={() => setMenuOpen(false)}
-      >
-        Men <span>→</span>
-      </Link>
-      
-      <Link 
-        to="/women" 
-        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
-        onClick={() => setMenuOpen(false)}
-      >
-        Women <span>→</span>
-      </Link>
-      
-      <Link 
-        to="/kids" 
-        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
-        onClick={() => setMenuOpen(false)}
-      >
-        Kids <span>→</span>
-      </Link>
+      {/* Mobile Dropdown Menu - Modern Design */}
+      {menuOpen && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm md:hidden z-40 animate-fade-in"
+            onClick={() => setMenuOpen(false)}
+          ></div>
 
-      {/* قسم الأزرار في الأسفل */}
-      <div className="mt-4 p-2 bg-gray-50 rounded-2xl space-y-3">
-        {user ? (
-          <button 
-            onClick={() => { logout(); setMenuOpen(false); }} 
-            className="w-full bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-colors"
-          >
-            Logout
-          </button>
-        ) : (
-          <div className="grid grid-cols-2 gap-3">
-            <Link 
-              to="/login" 
-              className="bg-[#8D5F8C] text-white py-3 rounded-xl font-bold text-center shadow-md shadow-[#8D5F8C]/20" 
-              onClick={() => setMenuOpen(false)}
-            >
-              Login
-            </Link>
-            <Link 
-              to="/register" 
-              className="bg-white text-[#8D5F8C] border border-[#8D5F8C]/20 py-3 rounded-xl font-bold text-center" 
-              onClick={() => setMenuOpen(false)}
-            >
-              Register
-            </Link>
+          {/* Dropdown Menu */}
+          <div className="absolute top-16 sm:top-20 left-0 right-0 mx-4 bg-white shadow-2xl md:hidden z-50 rounded-2xl overflow-hidden animate-slide-down">
+            
+            {/* Navigation Links */}
+            <div className="p-4 space-y-1">
+              <Link 
+                to="/men" 
+                className="flex items-center justify-between px-4 py-3.5 text-gray-800 font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#8D5F8C]/5 hover:to-[#8D5F8C]/10 transition-all group"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="text-base">Men's Collection</span>
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-[#8D5F8C] group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              
+              <Link 
+                to="/women" 
+                className="flex items-center justify-between px-4 py-3.5 text-gray-800 font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#8D5F8C]/5 hover:to-[#8D5F8C]/10 transition-all group"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="text-base">Women's Collection</span>
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-[#8D5F8C] group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              
+              <Link 
+                to="/kids" 
+                className="flex items-center justify-between px-4 py-3.5 text-gray-800 font-medium rounded-xl hover:bg-gradient-to-r hover:from-[#8D5F8C]/5 hover:to-[#8D5F8C]/10 transition-all group"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span className="text-base">Kids Collection</span>
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-[#8D5F8C] group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Divider */}
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mx-4"></div>
+
+            {/* Auth Section */}
+            <div className="p-4">
+              {user ? (
+                <button 
+                  onClick={() => { logout(); setMenuOpen(false); }} 
+                  className="w-full bg-gradient-to-r from-red-50 to-red-100 text-red-600 py-3.5 px-4 rounded-xl font-semibold hover:from-red-100 hover:to-red-200 transition-all shadow-sm"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                  </span>
+                </button>
+              ) : (
+                <div className="space-y-2.5">
+                  <Link 
+                    to="/login" 
+                    className="block w-full bg-gradient-to-r from-[#8D5F8C] to-[#9D6F9C] text-white py-3.5 px-4 rounded-xl font-semibold text-center shadow-lg shadow-[#8D5F8C]/30 hover:shadow-xl hover:shadow-[#8D5F8C]/40 transform hover:-translate-y-0.5 transition-all" 
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                      </svg>
+                      Login
+                    </span>
+                  </Link>
+                  <Link 
+                    to="/register" 
+                    className="block w-full bg-white text-[#8D5F8C] border-2 border-[#8D5F8C]/20 py-3.5 px-4 rounded-xl font-semibold text-center hover:bg-[#8D5F8C]/5 hover:border-[#8D5F8C]/40 transition-all" 
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                      </svg>
+                      Register
+                    </span>
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        </>
+      )}
+
+      {/* Custom Animations */}
+      <style>{`
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.2s ease-out;
+        }
+        .animate-slide-down {
+          animation: slide-down 0.3s ease-out;
+        }
+      `}</style>
     </nav>
   );
 }
