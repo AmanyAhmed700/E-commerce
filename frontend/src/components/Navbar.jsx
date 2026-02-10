@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
 import logo from "../assets/logo1.svg";
-import { HiMenu, HiX, HiSearch } from "react-icons/hi";
+import { HiMenu, HiX, HiSearch, HiOutlineShoppingCart, HiOutlineUser } from "react-icons/hi";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -14,7 +14,6 @@ export default function Navbar() {
 
   const navigate = useNavigate();
 
-  // تأثير عند تغير عدد المنتجات في الكارت
   useEffect(() => {
     if (cart.items.length > 0) {
       setAnimateCount(true);
@@ -28,120 +27,152 @@ export default function Navbar() {
     if (searchTerm.trim()) {
       navigate(`/search?query=${searchTerm}`);
       setSearchTerm("");
+      setMenuOpen(false);
     }
   };
 
   return (
-    <nav className="bg-[#8D5F8C] text-white px-4 py-3 flex justify-between items-center h-20 w-full relative 
-                shadow-sm shadow-gray-500 border-t-1 border-white ">
-      {/* Logo */}
-      <Link to="/" className="text-2xl font-bold text-white flex items-center">
-        <img src={logo} alt="Logo" className="h-12" />
-      </Link>
-
-      {/* 🔍 Search Bar - Always Visible (Responsive) */}
- <form
-  onSubmit={handleSearch}
-  className="flex items-center w-full sm:w-2/3 md:w-1/3 lg:w-1/2 mx-2 
-             max-w-[600px] min-w-[150px]"
->
-  <div className="flex items-center bg-white rounded-full px-3 py-1 w-full shadow-sm">
-    <input
-      type="text"
-      placeholder="Search products..."
-      value={searchTerm}
-      onChange={(e) => setSearchTerm(e.target.value)}
-      className="flex-1 text-black px-2 py-1 rounded-l-full focus:outline-none 
-                 text-sm sm:text-base bg-transparent min-w-0"
-    />
-    {/* أيقونة السيرش دايمًا موجودة */}
-    <button
-      type="submit"
-      className="flex items-center justify-center text-[#8D5F8C] hover:text-gray-600"
-    >
-      <HiSearch className="h-5 w-5 sm:h-6 sm:w-6" />
-    </button>
-  </div>
-</form>
-
-
-
-
-      {/* Desktop Menu */}
-      <div className="hidden md:flex space-x-4 items-center">
-        <Link to="/men" className="hover:underline text-xl">Men</Link>
-        <Link to="/women" className="hover:underline text-xl">Women</Link>
-        <Link to="/kids" className="hover:underline text-xl">Kids</Link>
-
-        <Link to="/cart" className="relative hover:text-gray-200">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 8h14l-1.5 12h-11L5 8zm3-3a2 2 0 114 0m0 0a2 2 0 114 0"
-            />
-          </svg>
-          {cart.items.length > 0 && (
-            <span
-              className={`absolute -top-2 -right-2 bg-red-700 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full
-                ${animateCount ? "scale-125 transition-transform duration-300" : "scale-100 transition-transform duration-300"}`}
-            >
-              {cart.items.length}
-            </span>
-          )}
-        </Link>
-
-        {user ? (
-          <button onClick={logout} className="ml-4 bg-[#660b1d] px-3 py-1 rounded">Logout</button>
-        ) : (
-          <>
-            <Link to="/login" className="ml-4 bg-white text-[#8D5F8C] px-3 py-1 rounded hover:bg-[#c4a9c4] hover:text-white">Login</Link>
-            <Link to="/register" className="ml-2 bg-white text-[#8D5F8C] px-3 py-1 rounded hover:bg-[#c4a9c4] hover:text-white">Register</Link>
-          </>
-        )}
-      </div>
-
-      {/* Mobile Menu Button */}
-      <div className="md:hidden flex items-center">
-        <button onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <HiX className="h-8 w-8" /> : <HiMenu className="h-8 w-8" />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="absolute top-full left-0 w-full bg-gray-200 shadow-md flex flex-col items-center md:hidden z-50 py-2">
-          <Link to="/men" className="w-full text-center text-black py-2 border-b border-gray-600 hover:underline" onClick={() => setMenuOpen(false)}>Men</Link>
-          <Link to="/women" className="w-full text-center text-black py-2 border-b border-gray-600 hover:underline" onClick={() => setMenuOpen(false)}>Women</Link>
-          <Link to="/kids" className="w-full text-center text-black py-2 border-b border-gray-600 hover:underline" onClick={() => setMenuOpen(false)}>Kids</Link>
+    <nav className="bg-[#8D5F8C] text-white sticky top-0 z-[100] w-full shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20 gap-4">
           
-          <Link to="/cart" className="relative w-full text-center text-black py-2 hover:text-gray-200" onClick={() => setMenuOpen(false)}>
-            Cart
-            {cart.items.length > 0 && (
-              <span className={`absolute -top-2 -right-2 -[#8D5F8C] text-white text-xs font-bold w-5 h-5 flex items-center justify-center
-                ${animateCount ? "scale-125 transition-transform duration-300" : "scale-100 transition-transform duration-300"}`}>
-                {cart.items.length}
-              </span>
-            )}
+          {/* 1. Logo */}
+          <Link to="/" className="flex-shrink-0 flex items-center group">
+            <img src={logo} alt="Moon Logo" className="h-12 w-auto transition-transform group-hover:scale-105" />
+            <span className="hidden sm:block ml-2 text-2xl font-bold tracking-wider uppercase font-serif">Moon</span>
           </Link>
 
-          {user ? (
-            <button onClick={() => { logout(); setMenuOpen(false); }} className="w-full text-center bg-[#660b1d] text-white py-2 border-b border-black rounded-b">Logout</button>
-          ) : (
-            <>
-              <Link to="/login" className="w-full text-center bg-[#8D5F8C] text-white py-2 border-b border-black hover:bg-[#8D5F8C]" onClick={() => setMenuOpen(false)}>Login</Link>
-              <Link to="/register" className="w-full text-center bg-white text-[#8D5F8C] py-2 hover:bg-gray-100 rounded-b" onClick={() => setMenuOpen(false)}>Register</Link>
-            </>
-          )}
+          {/* 2. Search Bar (تعديل العرض ليكون متناسقاً) */}
+          <div className="flex-1 max-w-xl hidden sm:block">
+            <form onSubmit={handleSearch} className="relative group">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/10 text-white placeholder-white/70 border border-white/30 px-5 py-2 rounded-full 
+                           focus:outline-none focus:bg-white focus:text-[#8D5F8C] focus:placeholder-gray-400 transition-all"
+              />
+              <button type="submit" className="absolute right-4 top-2.5 text-white group-focus-within:text-[#8D5F8C]">
+                <HiSearch className="h-5 w-5" />
+              </button>
+            </form>
+          </div>
+
+          {/* 3. Desktop Navigation & Icons */}
+          <div className="hidden md:flex items-center space-x-6">
+            <div className="flex space-x-5 font-medium">
+              <Link to="/men" className="hover:text-white/80 transition">Men</Link>
+              <Link to="/women" className="hover:text-white/80 transition">Women</Link>
+              <Link to="/kids" className="hover:text-white/80 transition">Kids</Link>
+            </div>
+
+            <div className="h-6 w-[1px] bg-white/30"></div>
+
+            <div className="flex items-center space-x-4">
+              {/* Cart Icon */}
+              <Link to="/cart" className="relative p-2 hover:bg-white/10 rounded-full transition">
+                <HiOutlineShoppingCart className="h-7 w-7" />
+                {cart.items.length > 0 && (
+                  <span className={`absolute top-0 right-0 bg-white text-[#8D5F8C] text-[10px] font-bold w-5 h-5 
+                                    flex items-center justify-center rounded-full shadow-sm
+                                    ${animateCount ? "scale-125" : "scale-100"} transition-transform`}>
+                    {cart.items.length}
+                  </span>
+                )}
+              </Link>
+
+              {/* User / Auth Section */}
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <button onClick={logout} className="bg-white/20 hover:bg-white/30 px-4 py-1.5 rounded-lg text-sm transition">
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Link to="/login" className="p-2 hover:bg-white/10 rounded-full transition"><HiOutlineUser className="h-7 w-7"/></Link>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center gap-4">
+             {/* أيقونة البحث للموبايل */}
+             <Link to="/search" className="sm:hidden p-2"><HiSearch className="h-6 w-6" /></Link>
+             <Link to="/cart" className="relative p-2"><HiOutlineShoppingCart className="h-6 w-6" />
+                {cart.items.length > 0 && <span className="absolute top-0 right-0 bg-red-500 text-[10px] w-4 h-4 rounded-full flex items-center justify-center">{cart.items.length}</span>}
+             </Link>
+             <button onClick={() => setMenuOpen(!menuOpen)} className="p-1">
+               {menuOpen ? <HiX className="h-8 w-8" /> : <HiMenu className="h-8 w-8" />}
+             </button>
+          </div>
         </div>
-      )}
+      </div>
+
+      {/* 4. Mobile Side/Top Menu Overlay */}
+     {/* 4. Mobile Top Menu Overlay */}
+{menuOpen && (
+  <div className="absolute top-20 left-0 w-full bg-white shadow-2xl md:hidden z-50 animate-fade-in-down rounded-b-3xl">
+    <div className="flex flex-col py-4 px-4 space-y-2">
+      
+      {/* الروابط الأساسية بشكل كروت صغيرة ناعمة */}
+      <Link 
+        to="/men" 
+        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
+        onClick={() => setMenuOpen(false)}
+      >
+        Men <span>→</span>
+      </Link>
+      
+      <Link 
+        to="/women" 
+        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
+        onClick={() => setMenuOpen(false)}
+      >
+        Women <span>→</span>
+      </Link>
+      
+      <Link 
+        to="/kids" 
+        className="text-gray-700 text-lg font-medium px-4 py-3 rounded-2xl hover:bg-[#8D5F8C]/10 hover:text-[#8D5F8C] transition-all flex justify-between items-center"
+        onClick={() => setMenuOpen(false)}
+      >
+        Kids <span>→</span>
+      </Link>
+
+      {/* قسم الأزرار في الأسفل */}
+      <div className="mt-4 p-2 bg-gray-50 rounded-2xl space-y-3">
+        {user ? (
+          <button 
+            onClick={() => { logout(); setMenuOpen(false); }} 
+            className="w-full bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-colors"
+          >
+            Logout
+          </button>
+        ) : (
+          <div className="grid grid-cols-2 gap-3">
+            <Link 
+              to="/login" 
+              className="bg-[#8D5F8C] text-white py-3 rounded-xl font-bold text-center shadow-md shadow-[#8D5F8C]/20" 
+              onClick={() => setMenuOpen(false)}
+            >
+              Login
+            </Link>
+            <Link 
+              to="/register" 
+              className="bg-white text-[#8D5F8C] border border-[#8D5F8C]/20 py-3 rounded-xl font-bold text-center" 
+              onClick={() => setMenuOpen(false)}
+            >
+              Register
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+)}
     </nav>
   );
 }

@@ -33,12 +33,17 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        {/* 2. استخدام المكون Router الذي يشير الآن لـ HashRouter */}
         <Router>
-          <div className="flex flex-col min-h-screen">
+          {/* استخدام overflow-x-hidden على الحاوية الرئيسية ضروري جداً 
+             لمنع الـ scroll العرضي في الموبايل الناتج عن السايدبار
+          */}
+          <div className="flex flex-col min-h-screen w-full overflow-x-hidden bg-gray-50">
             <Navbar />
 
-            <div className="flex-grow">
+            {/* إضافة w-full هنا تضمن أن المسارات تأخذ كامل العرض المتاح 
+               flex-grow تجعل الفوتر دائماً في الأسفل
+            */}
+            <main className="flex-grow w-full flex flex-col">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -56,13 +61,16 @@ function App() {
                 <Route element={<ProtectedRoute role="admin" />}>
                   <Route path="/admin/products" element={<ProductsAdmin />} />
                   <Route path="/admin" element={<AdminPanel />}>
+                    {/* ملاحظة: تأكدي أن AdminPanel يحتوي على <Outlet /> 
+                       داخل Div يملك كلاس flex-1 لتجنب تآكل المحتوى
+                    */}
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="users" element={<UserList />} />
                     <Route path="add-product" element={<AddProductForm />} />
                   </Route>
                 </Route>
               </Routes>
-            </div>
+            </main>
 
             <Footer />
           </div>
